@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Reservation {
+  id           String      @id @default(cuid())
+  patientName  String
+  phone        String?
+  status       String      @default("reserved")
+  reservedAt   String
+  memo         String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  staffId      String?
+  departmentId String?
+  staff        Staff?      @relation(fields: [staffId], references: [id])
+  department   Department? @relation(fields: [departmentId], references: [id])
+}
+
+model Staff {
+  id           String        @id @default(cuid())
+  name         String
+  email        String        @unique
+  password     String
+  role         String        @default("staff")
+  isActive     Boolean       @default(true)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  reservations Reservation[]
+}
+
+model Department {
+  id           String        @id @default(cuid())
+  name         String
+  isActive     Boolean       @default(true)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  reservations Reservation[]
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  action     String
+  entityType String
+  entityId   String
+  entityName String
+  oldValues  String?
+  newValues  String?
+  userId     String?
+  userName   String?
+  createdAt  DateTime @default(now())
+}
