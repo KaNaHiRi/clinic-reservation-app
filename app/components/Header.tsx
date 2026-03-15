@@ -7,7 +7,7 @@ import { useSession, signOut } from 'next-auth/react'
 export default function Header() {
   const { data: session } = useSession()
   const [menuOpen, setMenuOpen] = useState(false)
-  const isAdmin = session?.user?.role === 'admin'
+  const isAdmin = (session?.user as { role?: string })?.role === 'admin'
 
   return (
     <header className="bg-white border-b border-gray-200 shadow-sm">
