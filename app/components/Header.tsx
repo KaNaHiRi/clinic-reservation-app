@@ -30,6 +30,18 @@ export default function Header() {
             <Link href="/calendar" className="text-sm text-gray-600 hover:text-blue-600 transition-colors">
               カレンダー
             </Link>
+            <Link href="/stats" className="text-sm text-gray-600 hover:text-blue-600 transition-colors">
+              統計
+            </Link>
+            {/* 患者用予約フォーム（別タブ） */}
+            <Link
+              href="/book"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-emerald-600 hover:text-emerald-700 border border-emerald-200 px-2.5 py-1 rounded-lg hover:bg-emerald-50 transition-colors"
+            >
+              患者用予約↗
+            </Link>
             {isAdmin && (
               <>
                 <Link href="/admin/staff" className="text-sm text-gray-600 hover:text-blue-600 transition-colors">
@@ -89,6 +101,23 @@ export default function Header() {
               className="text-sm text-gray-700 hover:bg-gray-50 px-3 py-2.5 rounded-lg transition-colors"
             >
               📅 カレンダー
+            </Link>
+            <Link
+              href="/stats"
+              onClick={() => setMenuOpen(false)}
+              className="text-sm text-gray-700 hover:bg-gray-50 px-3 py-2.5 rounded-lg transition-colors"
+            >
+              📊 統計
+            </Link>
+            {/* 患者用予約フォーム（別タブ） */}
+            <Link
+              href="/book"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setMenuOpen(false)}
+              className="text-sm text-emerald-600 hover:bg-emerald-50 px-3 py-2.5 rounded-lg transition-colors"
+            >
+              🔗 患者用予約フォーム↗
             </Link>
             {isAdmin && (
               <>

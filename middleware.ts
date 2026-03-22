@@ -10,22 +10,14 @@ export async function middleware(request: NextRequest) {
       ? '__Secure-authjs.session-token'
       : 'authjs.session-token',
   })
-
   const { pathname } = request.nextUrl
-
-  if (!token) {
-    return NextResponse.redirect(new URL('/login', request.url))
-  }
-
+  if (!token) return NextResponse.redirect(new URL('/login', request.url))
   if (pathname.startsWith('/admin')) {
-    if (token.role !== 'admin') {
-      return NextResponse.redirect(new URL('/', request.url))
-    }
+    if (token.role !== 'admin') return NextResponse.redirect(new URL('/', request.url))
   }
-
   return NextResponse.next()
 }
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|login).*)'],
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|login|book).*)'],
 }

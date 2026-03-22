@@ -8,7 +8,6 @@ import Header from '@/app/components/Header'
 import StatusBadge from '@/app/components/StatusBadge'
 import ReservationModal from '@/app/components/ReservationModal'
 
-// スケルトンUI
 function SkeletonRow() {
   return (
     <tr className="border-b border-gray-100">
@@ -77,7 +76,6 @@ export default function HomePage() {
     toast.success('予約を削除しました')
   }
 
-  // インラインステータス変更
   const handleStatusChange = async (id: string, newStatus: string) => {
     setUpdatingId(id)
     try {
@@ -106,6 +104,14 @@ export default function HomePage() {
     }
   }
 
+  const handleCsvExport = () => {
+    const params = new URLSearchParams()
+    if (filterStatus) params.set('status', filterStatus)
+    if (filterDate) params.set('date', filterDate)
+    if (filterKeyword) params.set('keyword', filterKeyword)
+    window.location.href = `/api/reservations/export?${params}`
+  }
+
   const openCreate = () => { setEditTarget(null); setModalOpen(true) }
   const openEdit = (r: Reservation) => { setEditTarget(r); setModalOpen(true) }
 
@@ -114,6 +120,7 @@ export default function HomePage() {
   ).length
   const reservedCount = reservations.filter((r) => r.status === 'reserved').length
   const visitedCount = reservations.filter((r) => r.status === 'visited').length
+  const cancelledCount = reservations.filter((r) => r.status === 'cancelled').length
 
   if (!isMounted) return null
 
@@ -122,12 +129,13 @@ export default function HomePage() {
       <Header />
       <main className="max-w-5xl mx-auto px-4 py-6">
 
-        {/* 統計カード：モバイルは縦積み */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+        {/* 統計カード */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
           {[
             { label: '今日の予約', value: todayCount, color: 'blue', icon: '📅' },
             { label: '予約済', value: reservedCount, color: 'yellow', icon: '🕐' },
             { label: '来院済', value: visitedCount, color: 'green', icon: '✅' },
+            { label: 'キャンセル', value: cancelledCount, color: 'gray', icon: '❌' },
           ].map(({ label, value, color, icon }) => (
             <div key={label} className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 flex items-center gap-4">
               <span className="text-2xl">{icon}</span>
@@ -181,6 +189,14 @@ export default function HomePage() {
               リセット
             </button>
             <div className="ml-auto flex items-center gap-2">
+              {/* CSVエクスポート */}
+              <button
+                onClick={handleCsvExport}
+                className="hidden sm:flex items-center gap-1.5 text-sm text-gray-700 px-3 py-1.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                📥 CSV
+              </button>
+              {/* カレンダー */}
               <Link
                 href="/calendar"
                 className="hidden sm:flex items-center gap-1.5 text-sm text-gray-700 px-3 py-1.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
@@ -191,6 +207,7 @@ export default function HomePage() {
                 </svg>
                 カレンダー
               </Link>
+              {/* 新規予約 */}
               <button
                 onClick={openCreate}
                 className="bg-blue-600 text-white px-4 py-1.5 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
@@ -201,7 +218,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* テーブル：横スクロール対応 */}
+        {/* テーブル */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
           {loading ? (
             <div className="overflow-x-auto">
@@ -245,7 +262,6 @@ export default function HomePage() {
                       <td className="px-4 py-3 text-gray-600 whitespace-nowrap">{r.department?.name ?? '—'}</td>
                       <td className="px-4 py-3 text-gray-600 whitespace-nowrap">{r.staff?.name ?? '—'}</td>
                       <td className="px-4 py-3 whitespace-nowrap">
-                        {/* インラインステータス変更 */}
                         <select
                           value={r.status}
                           onChange={(e) => handleStatusChange(r.id, e.target.value)}
