@@ -143,6 +143,6 @@ npm run dev
 
 ## 作者
 
-**KAZU** - システムエンジニア（医療系システム専門）
+**KaNaHiRi** - システムエンジニア（医療系システム専門）
 
 ポートフォリオ：https://portfolio-kahahiris-projects.vercel.app
